@@ -35,6 +35,12 @@ parser.add_argument(
     required=True,
     help="Output path.")
 parser.add_argument(
+    "--subnetwork",
+    default=None,
+    required=False,
+    help="subnetwork"
+    )
+parser.add_argument(
     "--num_output_files",
     type=int,
     default=256,
@@ -92,6 +98,8 @@ def rebalance_data_shards():
   job_name = (
       f"shard-rebalancer-{datetime.datetime.now().strftime('%y%m%d-%H%M%S')}")
 
+  if not args.subnetwork:
+      args.subnetwork="default"
   # set up Beam pipeline.
   options = {
       "staging_location": os.path.join(args.output_path, "tmp", "staging"),
@@ -100,6 +108,7 @@ def rebalance_data_shards():
       "project": args.project,
       "save_main_session": True,
       "region": args.region,
+      "subnetwork" : args.subnetwork
   }
 
   opts = beam.pipeline.PipelineOptions(flags=[], **options)
