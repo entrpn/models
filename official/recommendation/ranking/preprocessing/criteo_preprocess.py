@@ -57,6 +57,12 @@ parser.add_argument(
     required=True,
     help="Output path.")
 parser.add_argument(
+    "--subnetwork",
+    default=None,
+    required=False,
+    help="subnetwork"
+    )
+parser.add_argument(
     "--temp_dir",
     default=None,
     required=True,
@@ -238,7 +244,8 @@ def transform_data(data_path, output_path):
 
   # set up Beam pipeline.
   pipeline_options = None
-
+  if not args.subnetwork:
+      args.subnetwork="default"
   if args.runner == "DataflowRunner":
     options = {
         "staging_location": os.path.join(output_path, "tmp", "staging"),
@@ -248,6 +255,7 @@ def transform_data(data_path, output_path):
         "save_main_session": True,
         "region": region,
         "setup_file": "./setup.py",
+        "subnetwork": args.subnetwork
     }
     pipeline_options = beam.pipeline.PipelineOptions(flags=[], **options)
   elif args.runner == "DirectRunner":
