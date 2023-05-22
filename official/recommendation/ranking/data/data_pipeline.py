@@ -39,7 +39,6 @@ class CriteoTsvReader:
                num_dense_features: int,
                vocab_sizes: List[int],
                use_synthetic_data: bool = False):
-    tf.print(f"file_pattern: {}file_pattern")
     self._file_pattern = file_pattern
     self._params = params
     self._num_dense_features = num_dense_features
