@@ -39,6 +39,7 @@ class CriteoTsvReader:
                num_dense_features: int,
                vocab_sizes: List[int],
                use_synthetic_data: bool = False):
+    tf.print(f"file_pattern: {}file_pattern")
     self._file_pattern = file_pattern
     self._params = params
     self._num_dense_features = num_dense_features
@@ -103,6 +104,7 @@ class CriteoTsvReader:
     def make_dataset(shard_index):
       filenames_for_shard = filenames.shard(num_shards_per_host, shard_index)
       dataset = tf.data.TextLineDataset(filenames_for_shard)
+      # Try with and without repeat.
       if params.is_training:
         dataset = dataset.repeat()
       dataset = dataset.batch(batch_size, drop_remainder=True)
@@ -117,7 +119,8 @@ class CriteoTsvReader:
         num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
     dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
-
+    # This will test if input is not a bottlneck.
+    dataset = dataset.take(1).cache().repeat()
     return dataset
 
   def _generate_synthetic_data(self, ctx: tf.distribute.InputContext,
