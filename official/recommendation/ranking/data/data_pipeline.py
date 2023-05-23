@@ -104,8 +104,8 @@ class CriteoTsvReader:
       filenames_for_shard = filenames.shard(num_shards_per_host, shard_index)
       dataset = tf.data.TextLineDataset(filenames_for_shard)
       # Try with and without repeat.
-      if params.is_training:
-        dataset = dataset.repeat()
+      # if params.is_training:
+      #   dataset = dataset.repeat()
       dataset = dataset.batch(batch_size, drop_remainder=True)
       dataset = dataset.map(_parse_fn,
                             num_parallel_calls=tf.data.experimental.AUTOTUNE)
