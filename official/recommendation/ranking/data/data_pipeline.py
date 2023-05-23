@@ -119,7 +119,7 @@ class CriteoTsvReader:
 
     dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
     # This will test if input is not a bottlneck.
-    dataset = dataset.take(1).cache().repeat()
+    #dataset = dataset.take(1).cache().repeat()
     return dataset
 
   def _generate_synthetic_data(self, ctx: tf.distribute.InputContext,
